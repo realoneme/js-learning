@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>setTimeOut</title>
+</head>
+<body>
+    <b>ファイルをダウンロードして、ブラウザでコードを実行してね。</b>
+    <p>
+        setTimeOut(関数/‘コード断片（推奨しません）’)
+    </p>
+    <p>
+        すみませんが、前回のコードは間違った所があるので、今回改めて説明します。前回は第一位の引数はコードになりました。MDNによると、この構文は推奨しません。<br>
+        前回文字列を含める代替構文を使って、しかもconsole.logっていうconsole系のsystem自体のメソッド、実行結果は普通のfunctionを使うことと違います。（chromeは別の修正があるかな〜はっきり覚えられないです。）<br>
+        ところが、常にfunctionを使います。<br>
+        改めて、コードを実行します。結果は一体なんでしょうか。
+    </p>
+<pre>
+    for(let i=0;i<3;i++){
+        setTimeout(()=>{
+            console.log(i)
+        },1)
+    }
+    
+    for(var i=0;i<3;i++){
+        setTimeout(()=>{
+            console.log(i)
+        },1)
+    }
+</pre>
+<button onclick="test()">GO!</button>
+<div>
+    結果：<br>
+    <div>Let: <span id="uselet"></span></div>
+    <div>Var: <span id="usevar"></span></div>
+    <div id="re"></div>
+</div>
+<div class="instruction" style="margin-top: 30px;">
+    前回原因を説明しました。ここで、詳細な説明改めて記録します。<br>
+    letとconstで宣言だったら、作用域が{}にあります。{}にある計算結果は、この作用域に保存されました。setTimeoutでプリントした結果は毎回保存された値です。<br>
+    varは違います。巻き上げの原因、loopの条件で宣言されたiの作用域は{}限りではない。Global範囲の変数です。コードを実行する順位は：同期のメソットを実行ー＞非同期のメソットを実行。<br>
+    だから、forを実行してから、setTimeoutを実行し始めます。この際、forは実行終了、iの作用域はglobalなので、この時点の値は最後の結果になりました。iの値は３になってから、setTimeoutを実行し始めます。プリントされたのは最後の結果、３です。
+</div>
+<div>
+    以下は同期と非同期の問題。<br>
+    非同期函数遅いよ。他の構文を実行ブロックしないです。<br>
+    consoleで結果を見られます。    
+</div>
+<pre>
+    setTimeout(()=>{
+        console.log('I am the upper one')
+    },0)
+    console.log('I am the bottom one.')
+</pre>
+<div style="margin-top: 30px;">作用域</div>
+<pre>
+    for(var b=0; b<3; b++){
+        console.log(b)
+    }
+    console.log(b)
+
+    for(let c=0; c<3; c++){
+        console.log(c)
+    }
+    console.log(c)
+</pre>
+<div>
+    作用域の原因、作用域の外で変数cをプリントしたら、「Uncaught ReferenceError: c is not defined」っていうエラーが出てきました。<br>
+    でも、varの作用域はglobalなので、外でbをプリントできます。
+</div>
+    <script>
+        var oLet = document.getElementById('uselet');
+        var oVar = document.getElementById('usevar');
+
+        function test() {
+            for(let i=0;i<3;i++){
+                setTimeout(()=>{
+                    oLet.innerText+= i;
+                },1)
+            }
+
+            for(var i=0;i<3;i++){
+                setTimeout(()=>{
+                    oVar.innerText+= i;
+                },1)
+            }
+        }
+
+        
+        for(var b=0; b<3;b++){
+            console.log(b)
+        }
+        console.log(b)
+
+        for(let c=0; c<3; c++){
+            console.log(c)
+        }
+        // console.log(c)
+
+
+        // 非同期関数遅いよ。
+        setTimeout(()=>{
+            console.log('I am the upper one')
+        },0)
+        console.log('I am the bottom one.')
+    </script>
+</body>
+</html>
