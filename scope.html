@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data types</title>
+</head>
+<body>
+    <p>前回「巻き上げ」のことちょっと話したんですけど、時間なのであまり分からないかもしれません。最近letとかconstとかしか使わないけど、実はブラウザがこういうキーワード分からないです。
+        プロジェクトでコンパイルの時babelを使って、全てのletをvarになります。ブラウザはletなんて知らないです。
+    </p>
+    <p>多分将来varを使うとことますます減ってくるかもしれませんが、JSの一部の基礎知識ですから、一応知った方がいいと思っています。</p>
+    
+    <p>ブラウザがHTMLをロードする時、JSの実行環境を提供します。これはwindow（global作用域）と言います。</p>
+    <p>「巻き上げ」という特徴があるのはvarとfunctionしかありません。でも、varとfunctionの「巻き上げ」は違います。</p>
+
+    <p>
+        *　var：定義のみが巻き上げられ、初期化はそうでありません。変数の値は undefined になります。<br>
+        *　function：関数宣言がコード領域を実行する前にメモリーに配置されて、コードで関数を定義する前に使うことができることです。
+    </p>
+    <p>
+        巻き上げを完了して、コードは上から下まで実行します。
+    </p>
+    <!-- <dl>
+        <dt>プリミティブ値</dt>        
+        <dd>Boolean</dd>
+        <dd>Null</dd>
+        <dd>Undefined</dd>
+        <dd>Number</dd>
+        <dd>BigInt</dd>
+        <dd>String</dd>
+        <dd>Symbol</dd>
+        
+    </dl> -->
+    <p>
+        private変数とglobal変数：<br>
+        {}の中で宣言された変数はprivate変数、{}以外のところで宣言された変数はglobal変数。{}の中でglobal変数の値が取れますが、{}の外でprivate変数の値取れないです。なるべくprivate変数を使ったほうがいいです。<br>
+        functionの引数はprivateです。function以外で読めないです。これはJavaScriptで最も素晴らしいものーー<a href="https://typescript-jp.gitbook.io/deep-dive/recap/closure">クロージャ（閉包）</a>です。<br>
+        函数内コードの実行順位：<br>
+        １　引数に値を代入<br>
+        ２　作用域内の変数の巻き上げ<br>
+        ３　上から下まで実行
+    </p>
+    <p>
+        以下のコードの実行結果は？なぜ？
+    </p>
+    <pre>
+        console.log(num);
+        var num = 123;
+        console.log(num);
+        console.log(obj);
+        var obj = {
+            name: "小籠包"
+        }
+        console.log(obj)
+
+        function fn(a, b) {
+            console.log(name1);
+            console.log(a, b);
+            var name1 = "桂花楼";
+            console.log(name1);
+        }
+
+        fn(11, 22);
+
+        console.log(a, b);
+        console.log(name1);
+
+        function fn1(newName) {
+            var name1 = "棒棒鶏";
+            name1 = newName;
+            console.log(name1);
+        }
+        fn1("紅焼肉");
+
+        console.log(num2);
+        var num2;
+
+    </pre>
+    <script>
+        console.log(num);
+        var num = 123;
+        console.log(num);
+        console.log(obj);
+        var obj = {
+            name: "小籠包"
+        }
+        console.log(obj)
+
+        function fn(a, b) {
+            console.log(name1);
+            console.log(a, b);
+            var name1 = "桂花楼";
+            console.log(name1);
+        }
+
+        fn(11, 22);
+
+        console.log(a, b);
+        console.log(name1);
+
+        function fn1(newName) {
+            var name1 = "棒棒鶏";
+            name1 = newName;
+            console.log(name1);
+        }
+        fn1("紅焼肉");
+
+        console.log(num2);
+        var num2;
+
+    </script>
+</body>
+</html>
