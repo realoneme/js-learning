@@ -5,25 +5,25 @@
 // リターンされたデータの中に、商品の種類たくさんがあります。
 
 // 要望は下記になります。
-// 1. 無効の商品カートに灰色で表します。
+// 1. カートに無効の商品灰色で展示します。
 // 2. 有効の商品は２種類になって、2つ店舗のように分別で展示します。
-// 3. 一つの種類のキャンペーンがある商品をカートで一緒に展示させます。一つの商品は一個以上のキャンペーンが持ってる状況もある。
+// 3. 一つの種類のキャンペーンがある商品をカートで一緒に展示させます。一つの商品は一個以上のキャンペーンが持ってる状況もあります。
 // 4. 並び順は新着順になります。
-shopping cart
+// 5. 商品名は一定的なルールにより画面で展示します。
 
 
-
-// 整理购物车数据，用于返回购物车数据，传入后台返回的购物车数据json
-// 进行大前端整理、排序、归并处理后，通过api返回给ajax，再在前端渲染页面
+// 整理购物车数据，用于返回购物车数据，传入后台返回的购物车数据json (カートのデータを整理すること。整理したデータをJSONデータにとして、フロントエンドにリターンすること。)
+// 进行大前端整理、排序、归并处理后，通过api返回给ajax，再在前端渲染页面（データ整理して、ソートして、マージして、フロントエンド側Ajaxなどを通じてAPIからリターン値をもらって、画面をレンダすること。）
 function settleShoppingListData(val) {
 
-  // 如果传入数据有误，直接返回null
+  // 如果传入数据有误，直接返回null（引数が間違った時、Nullをリターンする。このvalはバックエンドからのデータ。）
   if (!val) return null;
 
-  // 如果后台返回数据有误, 直接返回data
+  // 如果后台返回数据有误, 直接返回data（バックエンドからのステータスは間違った時、バックエンド提供したデータをリターンする。このようなエラーは常にリクエストを出す時、paramsが間違えた時は多い。）
   if (val.status < 0) return val.data;
 
-  let products = val.data.items;
+  //　必要な変数を準備しておく
+  let products = val.data.items; 
   let activities = val.data.activities;
   let sum = products.length;
   let price = val.data.pay_amount;
@@ -33,7 +33,7 @@ function settleShoppingListData(val) {
   let len = products.length;
   let inValidIds = [];
 
-  // 抽出所有的已经失效商品
+  // 抽出所有的已经失效商品 (全ての無効商品「販売されていない商品」を取って、productsという変数に保存する)
   products = products.map(item => {
     if(!item.is_onshelf) {
       inValidIds.push(item.id);
@@ -42,6 +42,7 @@ function settleShoppingListData(val) {
     return item;
   });
 
+  // 再帰関数でデータをソートする
   function reSortList(messArr) {
     if (finalArr.length === len) return; //排好序的arr长度等于购物车所有商品的长度时候，return
 
@@ -82,7 +83,7 @@ function settleShoppingListData(val) {
 
     reSortList(products);
 
-    //商品类别顺序数组，前端拿到这个数组，按照这个数组取出类别，渲染html
+    //商品类别顺序数组，前端拿到这个数组，按照这个数组取出类别，渲染html（商品のカテゴリの順位。並び順は新着順なので、カートに一位の商品は一番遅いカートに入れた商品、なので、この商品のカテゴリは一位になる。）
     let classSequence = [];
 
     let wholeProducts = {};
@@ -173,7 +174,7 @@ function settleShoppingListData(val) {
               if (l != 'purpose') item.skuDesc.push(item.sku_value[l].text);
             }
           } else if (classKey == 6) {
-            // 对pond5的视频description进行处理
+            // 对pond5的视频description进行处理（商品の動画のratioを処理する）
             let ratio = '';
             for (let l in item.sku_value) {
               if (l === 'size' || l === 'pic_file_extension') {
