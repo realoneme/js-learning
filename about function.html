@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>関数</title>
+    <style>
+        .button{
+            display: inline-block;
+            padding: 10px;
+            background-color: sienna;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+        .hide{
+            display: none;
+        }
+
+        .content-wrapper {
+            margin-top: 20px;
+            display: flex;
+        }
+        .content{
+            width: 200px;
+            height: 150px;
+            background-color: rosybrown;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            line-height: 150px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="button J_btn">click <span class="J_btn-text">button1</span> to open</div>
+    <div class="button J_btn">click <span class="J_btn-text">button2</span> to open</div>
+    <div class="button J_btn">click <span class="J_btn-text">button3</span> to open</div>
+    
+    <div class="content-wrapper">
+        <div class="content hide">
+            this is for <span class="J_cont-text"></span>
+        </div>
+        <div class="content hide">
+            this is for <span class="J_cont-text"></span>
+        </div>
+        <div class="content hide">
+            this is for <span class="J_cont-text"></span>
+        </div>
+    </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    // 1. 直接に関数の内容を書く
+    $.each($('.J_btn'),(i, btn) => {
+        const text = $(btn).children('.J_btn-text').text();
+        $(btn).on('click', () => {
+            $.each($('.content'),(ind, cont)=>{
+                if(i === ind){
+                    $(cont).toggleClass('hide').children('.J_cont-text').text(text);
+                }            
+            })
+        })
+    })
+   
+</script>
+</body>
+</html>
